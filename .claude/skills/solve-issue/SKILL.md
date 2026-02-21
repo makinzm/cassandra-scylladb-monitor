@@ -3,7 +3,7 @@ name: solve-issue
 description: Solve a GitHub issue end-to-end — read the issue, plan the work, implement it on a branch, commit, and open a pull request.
 disable-model-invocation: true
 argument-hint: <issue-number>
-allowed-tools: Bash(gh issue view *), Bash(gh issue list *), Bash(gh pr create *), Bash(git switch *), Bash(git add *), Bash(git commit *), Bash(git push *)
+allowed-tools: Bash(gh issue view *), Bash(gh issue list *), Bash(gh pr create *), Bash(git switch *), Bash(git add *), Bash(git commit *), Bash(git push *), Bash(git pull *)
 ---
 
 Solve GitHub issue $ARGUMENTS end-to-end following these steps in order:
@@ -113,3 +113,14 @@ EOF
 ```
 
 Print the PR URL at the end.
+
+## Step 9 — Return to main and pull
+
+After the PR is open, switch back to `main` and pull the latest changes so the workspace is ready for the next issue:
+
+```bash
+git switch main
+git pull
+```
+
+Inform the user that the workspace is back on `main` and ready for the next issue.
