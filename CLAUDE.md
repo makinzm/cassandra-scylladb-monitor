@@ -77,3 +77,13 @@ The client uses `DB_HOST` env var (default: `localhost:9042`) to set the connect
 |---|---|---|
 | `DB_HOST` | `localhost:9042` | DB connection target for Rust client |
 | `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password |
+
+## Pull Request Policy
+
+**One PR solves one problem.** Each pull request must correspond to exactly one GitHub issue or one cohesive concern. Do not bundle unrelated changes.
+
+**Grouping guideline:**
+- Claude configuration changes (`CLAUDE.md`, `.claude/skills/**`) may be combined in one PR since they form a single concern.
+- Project code changes (Docker Compose files, Prometheus config, Grafana dashboards, Rust client) must each be in their own PR tied to a specific issue.
+
+When creating a PR, always reference the issue it closes with `Closes #N` in the commit message and PR body.
