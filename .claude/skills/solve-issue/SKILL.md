@@ -3,10 +3,27 @@ name: solve-issue
 description: Solve a GitHub issue end-to-end — read the issue, plan the work, implement it on a branch, commit, and open a pull request.
 disable-model-invocation: true
 argument-hint: <issue-number>
-allowed-tools: Bash(gh issue view *), Bash(gh pr create *), Bash(git switch *), Bash(git add *), Bash(git commit *), Bash(git push *)
+allowed-tools: Bash(gh issue view *), Bash(gh issue list *), Bash(gh pr create *), Bash(git switch *), Bash(git add *), Bash(git commit *), Bash(git push *)
 ---
 
 Solve GitHub issue $ARGUMENTS end-to-end following these steps in order:
+
+## Step 0 — Resolve the issue number (only when no argument is given)
+
+If `$ARGUMENTS` is empty, you must determine which issue to solve before proceeding.
+
+1. Run:
+   ```bash
+   gh issue list --state open --json number,title,body
+   ```
+2. Parse each issue's `## Blocked by` section (if present) to build a full dependency graph.
+3. Find every issue whose blockers are either closed or non-existent — these are the **unblocked** issues.
+4. **Recommend the unblocked issue with the lowest number** as the natural next step, and explain:
+   - Why it is unblocked (no open blockers)
+   - Which other issues depend on it (i.e. what solving it will unlock)
+   - The full dependency chain so the user can see the big picture
+5. Ask the user which issue they want to solve. Use the recommended issue as the default choice.
+6. Once the user picks an issue number, set that as the target and continue to Step 1.
 
 ## Step 1 — Read the issue
 
