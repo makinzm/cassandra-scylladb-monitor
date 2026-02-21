@@ -1,0 +1,4 @@
+# 15s is the Prometheus-recommended default for most workloads.
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+global:
+  scrape_interval: 15s
