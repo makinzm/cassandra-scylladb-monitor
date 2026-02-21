@@ -2,3 +2,12 @@
 # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
 global:
   scrape_interval: 15s
+
+scrape_configs:
+  - job_name: cassandra
+    static_configs:
+      - targets: ["host.docker.internal:7070"]
+
+  - job_name: scylladb
+    static_configs:
+      - targets: ["host.docker.internal:9180"]
