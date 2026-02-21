@@ -70,4 +70,10 @@ After approval, create issues phase by phase using the `create-issues` skill. Pa
 /create-issues <issue 1 title and intent>, <issue 2 title and intent>, ...
 ```
 
+**Important — encode dependencies explicitly:**
+- For every issue that depends on an earlier one, include "blocked by #N" in its description passed to `create-issues`.
+- Example: `"Add JMX Exporter config — blocked by #5 (Cassandra compose must exist first)"`
+- Foundation issues (Phase 1) have no blockers.
+- Each subsequent issue must list every open issue it directly depends on so that `create-issues` can add the `## Blocked by` section to the issue body.
+
 After each phase is created, briefly confirm which issues were made and their numbers before moving to the next phase.
