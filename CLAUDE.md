@@ -78,6 +78,44 @@ The client uses `DB_HOST` env var (default: `localhost:9042`) to set the connect
 | `DB_HOST` | `localhost:9042` | DB connection target for Rust client |
 | `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password |
 
+## Comment Policy
+
+Comment only when the reason behind a decision is non-obvious. Keep comments concise: one or two lines stating the reason and, where applicable, a link to the official documentation or source.
+
+**Good:**
+```yaml
+# 15s is the Prometheus-recommended default for most workloads.
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+scrape_interval: 15s
+```
+
+**Bad** (restates what the code says, no reference):
+```yaml
+scrape_interval: 15s  # sets the scrape interval to 15 seconds
+```
+
+## Commit Message Policy
+
+Use a single-line conventional commit by default: `<type>: <what and why in one sentence>`.
+
+Add a multi-line body only when the reason is genuinely hard to understand without it (e.g. non-obvious trade-offs, workarounds for upstream bugs).
+
+Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Always end with `Closes #N`.
+
+**Good (single line):**
+```
+feat: add docker-compose.base.yml as the shared base for all DB stacks — Closes #1
+```
+
+**Only if truly needed (multi-line):**
+```
+feat: add docker-compose.base.yml as the shared base for all DB stacks
+
+<reason that cannot be expressed in one line>
+
+Closes #1
+```
+
 ## Pull Request Policy
 
 **One PR solves one problem.** Each pull request must correspond to exactly one GitHub issue or one cohesive concern. Do not bundle unrelated changes.

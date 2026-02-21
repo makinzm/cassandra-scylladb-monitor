@@ -67,21 +67,30 @@ Work through the plan in the determined order:
 - Make only the changes required by the acceptance criteria
 - Do not refactor unrelated code
 
-## Step 6 — Commit
+## Step 6 — Verify acceptance criteria
+
+Before committing, confirm every acceptance criterion is met:
+
+- **Prefer TDD**: if the issue involves code with testable behaviour, write and run tests first (`cargo test`, `pytest`, etc.). Do not proceed to commit if tests fail.
+- **If TDD is not applicable** (e.g. infrastructure, config, dashboards): confirm operation manually — start the relevant services and check each criterion by hand (e.g. `curl`, browser, CLI).
+- Document the verification method in the PR body under "How to verify" so reviewers can reproduce it.
+
+Do not commit until all acceptance criteria are verified.
+
+## Step 7 — Commit
 
 Stage specific files and commit with a conventional commit message:
 
 ```bash
 git add <specific files>
-git commit -m "<type>: <what and why>
-
-Closes #$ARGUMENTS"
+git commit -m "<type>: <what and why in one sentence> — Closes #$ARGUMENTS"
 ```
 
+Use a multi-line body only when the reason cannot fit in one sentence.
 Commit types: `feat`, `fix`, `docs`, `chore`, `refactor`.
 Group related changes in one commit; use multiple commits if changes are logically separate.
 
-## Step 7 — Push and open a pull request
+## Step 8 — Push and open a pull request
 
 ```bash
 git push -u origin HEAD
