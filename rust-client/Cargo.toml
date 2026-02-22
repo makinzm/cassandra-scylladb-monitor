@@ -1,0 +1,9 @@
+[package]
+name = "rust-client"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.60", features = ["derive"] }
+scylla = "1.5.0"
+tokio = { version = "1.49.0", features = ["full"] }

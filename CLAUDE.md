@@ -38,16 +38,20 @@ docker compose -f docker-compose.base.yml -f docker-compose.cassandra.yml down
 docker compose -f docker-compose.base.yml -f docker-compose.scylla.yml down
 ```
 
+## Toolchain Management
+
+All project tools are declared in `.mise.toml` and must be invoked via `mise exec --`. This ensures every contributor and CI runner uses the same pinned versions. Docker and kubectl are the only exceptions (assumed pre-installed globally).
+
+```bash
+mise install           # install all tools declared in .mise.toml
+mise exec -- <cmd>     # run any project tool through the managed environment
+```
+
 ## Rust Client Commands
 
 ```bash
-cd rust-client
-cargo build
-cargo run                  # runs sample SELECT/INSERT queries
-cargo test                 # run all tests
-cargo test <test_name>     # run a single test
-cargo fmt
-cargo clippy
+# Run from rust-client/
+mise exec -- cargo run    # connects to DB_HOST and executes sample queries
 ```
 
 The client uses `DB_HOST` env var (default: `localhost:9042`) to set the connection target.

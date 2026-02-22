@@ -11,3 +11,11 @@ pre-commit:
           echo "Fix with: git update-index --chmod=-x <file>"
           exit 1
         fi
+    rust-fmt:
+      glob: "rust-client/**/*.rs"
+      root: "rust-client"
+      run: mise exec -- cargo fmt --check
+    rust-clippy:
+      glob: "rust-client/**/*.rs"
+      root: "rust-client"
+      run: mise exec -- cargo clippy -- -D warnings
