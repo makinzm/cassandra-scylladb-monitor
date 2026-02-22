@@ -12,38 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start base stack (Prometheus + Grafana)
-        run: docker compose -f docker-compose.base.yml up -d
-
-      - name: Wait for Prometheus to become healthy
-        run: |
-          # Poll up to 60 seconds for Prometheus to respond.
-          for i in $(seq 1 12); do
-            if curl -sf http://localhost:9090/-/healthy > /dev/null; then
-              echo "Prometheus is healthy."
-              exit 0
-            fi
-            echo "Attempt $i/12: Prometheus not ready yet, waiting 5s..."
-            sleep 5
-          done
-          echo "ERROR: Prometheus did not become healthy within 60 seconds."
-          docker compose -f docker-compose.base.yml logs prometheus
-          exit 1
-
-      - name: Assert cassandra and scylladb scrape jobs are present
-        run: |
-          targets=$(curl -sf http://localhost:9090/api/v1/targets)
-          echo "$targets" | python3 -c "
-          import json, sys
-
-          data = json.load(sys.stdin)
-          jobs = {t['labels']['job'] for t in data['data']['activeTargets']}
-          print('Active jobs found:', jobs)
-
-          missing = {'cassandra', 'scylladb'} - jobs
-          if missing:
-              print('ERROR: Missing expected scrape jobs:', missing)
-              sys.exit(1)
-
-          print('OK: both cassandra and scylladb jobs are present.')
-          "
+      - name: Validate Prometheus scrape targets
+        run: bash scripts/validate-prometheus.sh
