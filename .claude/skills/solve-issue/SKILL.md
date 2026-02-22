@@ -83,7 +83,7 @@ Stage specific files and commit with a conventional commit message:
 
 ```bash
 git add <specific files>
-git commit -m "<type>: <what and why in one sentence> — Closes #$ARGUMENTS"
+git commit -m "<type>: <what and why in one sentence>"
 ```
 
 Use a multi-line body only when the reason cannot fit in one sentence.

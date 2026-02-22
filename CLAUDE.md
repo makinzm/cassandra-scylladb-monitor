@@ -128,13 +128,13 @@ Use a single-line conventional commit by default: `<type>: <what and why in one 
 
 Add a multi-line body only when the reason is genuinely hard to understand without it (e.g. non-obvious trade-offs, workarounds for upstream bugs).
 
-Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Always end with `Closes #N`.
+Types: `feat`, `fix`, `docs`, `chore`, `refactor`.
 
 **Granularity:** Each commit should cover one logical change. Do not bundle tooling setup, new scripts, CI changes, and documentation into a single commit — split them so each commit is independently understandable and revertable.
 
 **Good (single line):**
 ```
-feat: add docker-compose.base.yml as the shared base for all DB stacks — Closes #1
+feat: add docker-compose.base.yml as the shared base for all DB stacks
 ```
 
 **Only if truly needed (multi-line):**
@@ -142,8 +142,6 @@ feat: add docker-compose.base.yml as the shared base for all DB stacks — Close
 feat: add docker-compose.base.yml as the shared base for all DB stacks
 
 <reason that cannot be expressed in one line>
-
-Closes #1
 ```
 
 ## Pull Request Policy
