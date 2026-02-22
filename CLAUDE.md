@@ -12,11 +12,13 @@ A monorepo for monitoring Apache Cassandra and ScyllaDB using Prometheus and Gra
 ├── docker-compose.base.yml        # Shared services: Prometheus (9090), Grafana (3000)
 ├── docker-compose.cassandra.yml   # Cassandra (9042) + JMX Exporter (7070)
 ├── docker-compose.scylla.yml      # ScyllaDB (9042, metrics on 9180)
+├── docker-compose.storage-limits.yml  # storage_opt overrides (Linux + overlay2/xfs/pquota only)
 ├── prometheus/prometheus.yml      # Scrape config (15s interval)
 ├── grafana/provisioning/
 │   ├── datasources/               # Auto-provisioned Prometheus datasource
 │   └── dashboards/                # Cassandra and ScyllaDB dashboard JSONs
 ├── jmx-exporter/cassandra.yml     # JMX export config (Cassandra only)
+├── jmx-exporter/jmxremote.password  # JMX credentials mounted into Cassandra container
 ├── scripts/
 │   └── validate-prometheus.sh     # Local smoke test for Prometheus scrape config
 └── rust-client/
@@ -36,6 +38,18 @@ docker compose -f docker-compose.base.yml -f docker-compose.scylla.yml up -d
 # Stop (use whichever compose combo was used to start)
 docker compose -f docker-compose.base.yml -f docker-compose.cassandra.yml down
 docker compose -f docker-compose.base.yml -f docker-compose.scylla.yml down
+```
+
+Cassandra takes ~60–90 seconds to become healthy after `up -d`. The JMX Exporter waits for the healthcheck to pass before starting, so `http://localhost:7070/metrics` is not immediately available. Wait until `docker inspect --format='{{.State.Health.Status}}' cassandra-scylladb-monitor-cassandra-1` returns `healthy` before checking metrics.
+
+Cassandra takes roughly 60–90 seconds to pass its healthcheck on first start. The JMX Exporter will not start until Cassandra is healthy, so allow up to 2 minutes before expecting metrics at `http://localhost:7070/metrics`.
+
+On Linux with overlay2/xfs/pquota, append `docker-compose.storage-limits.yml` to enforce disk limits per container:
+
+```bash
+# Linux only
+docker compose -f docker-compose.base.yml -f docker-compose.cassandra.yml -f docker-compose.storage-limits.yml up -d
+docker compose -f docker-compose.base.yml -f docker-compose.scylla.yml    -f docker-compose.storage-limits.yml up -d
 ```
 
 ## Toolchain Management
@@ -61,6 +75,11 @@ The client uses `DB_HOST` env var (default: `localhost:9042`) to set the connect
 **Metrics ingestion differs by DB:**
 - Cassandra: metrics exposed via JMX Exporter sidecar at `:7070/metrics`
 - ScyllaDB: native Prometheus endpoint at `:9180/metrics` (no JMX Exporter needed)
+
+**JMX authentication:** `LOCAL_JMX=no` enables remote JMX on Cassandra but requires a password file at `/etc/cassandra/jmxremote.password`. The compose entrypoint installs `jmx-exporter/jmxremote.password` (credentials: `cassandra`/`cassandra`) into the container with mode 400 at startup. The JMX Exporter is configured with the same credentials in `jmx-exporter/cassandra.yml`.
+
+**JMX authentication (Cassandra only):**
+`LOCAL_JMX=no` enables remote JMX and activates password-file authentication. The file `jmx-exporter/jmxremote.password` is mounted into the Cassandra container at startup (via `entrypoint`) with mode 400, as required by the JVM. The JMX Exporter reads the same credentials from `jmx-exporter/cassandra.yml`. Do not commit real passwords here; this file holds dev-only defaults (`cassandra`/`cassandra`).
 
 **Prometheus** scrapes both jobs at 15s; whichever DB is not running will produce scrape errors (safely ignored).
 
