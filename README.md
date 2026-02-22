@@ -1,5 +1,7 @@
 # cassandra-scylladb-monitor
 
+[![Prometheus CI](https://github.com/makinzm/cassandra-scylladb-monitor/actions/workflows/prometheus-ci.yml/badge.svg)](https://github.com/makinzm/cassandra-scylladb-monitor/actions/workflows/prometheus-ci.yml)
+
 Monitoring stack for Apache Cassandra and ScyllaDB using Prometheus and Grafana.
 
 ## Quick Start
