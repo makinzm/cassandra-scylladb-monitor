@@ -1,0 +1,13 @@
+pre-commit:
+  commands:
+    no-executable-bit:
+      # Reject any staged file with mode 100755 (executable bit).
+      # Always invoke scripts with `bash script.sh` instead of chmod +x.
+      run: |
+        bad=$(git diff --cached --name-only | xargs git ls-files --stage 2>/dev/null | awk '$1 == "100755" {print $4}')
+        if [ -n "$bad" ]; then
+          echo "ERROR: staged file(s) have the executable bit set:"
+          echo "$bad"
+          echo "Fix with: git update-index --chmod=-x <file>"
+          exit 1
+        fi
