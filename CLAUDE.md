@@ -17,6 +17,8 @@ A monorepo for monitoring Apache Cassandra and ScyllaDB using Prometheus and Gra
 │   ├── datasources/               # Auto-provisioned Prometheus datasource
 │   └── dashboards/                # Cassandra and ScyllaDB dashboard JSONs
 ├── jmx-exporter/cassandra.yml     # JMX export config (Cassandra only)
+├── scripts/
+│   └── validate-prometheus.sh     # Local smoke test for Prometheus scrape config
 └── rust-client/
     ├── Cargo.toml
     └── src/main.rs                # CQL client using `scylla` crate
@@ -78,6 +80,28 @@ The client uses `DB_HOST` env var (default: `localhost:9042`) to set the connect
 | `DB_HOST` | `localhost:9042` | DB connection target for Rust client |
 | `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password |
 
+## Script Policy
+
+Never use `chmod +x` on scripts. Executable bits are fragile across environments (different OSes, git configs, CI runners). Always invoke scripts explicitly with the interpreter:
+
+```bash
+bash scripts/validate-prometheus.sh
+```
+
+A lefthook pre-commit hook enforces this: any staged file with mode `100755` will block the commit. After cloning, install tools via mise and activate the hook:
+
+```bash
+# Install mise if not already present: https://mise.jdx.dev/getting-started.html
+mise install                  # installs lefthook (declared in .mise.toml)
+mise exec -- lefthook install # activates the pre-commit hook
+```
+
+If a commit is blocked, fix the offending file with:
+
+```bash
+git update-index --chmod=-x <file>
+```
+
 ## Comment Policy
 
 Comment only when the reason behind a decision is non-obvious. Keep comments concise: one or two lines stating the reason and, where applicable, a link to the official documentation or source.
@@ -101,6 +125,8 @@ Use a single-line conventional commit by default: `<type>: <what and why in one 
 Add a multi-line body only when the reason is genuinely hard to understand without it (e.g. non-obvious trade-offs, workarounds for upstream bugs).
 
 Types: `feat`, `fix`, `docs`, `chore`, `refactor`. Always end with `Closes #N`.
+
+**Granularity:** Each commit should cover one logical change. Do not bundle tooling setup, new scripts, CI changes, and documentation into a single commit — split them so each commit is independently understandable and revertable.
 
 **Good (single line):**
 ```
