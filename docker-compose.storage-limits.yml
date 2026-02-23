@@ -1,0 +1,20 @@
+# Storage limits for the container writable layer.
+# Requires overlay2 on xfs with the pquota mount option (Linux only).
+# https://docs.docker.com/reference/compose-file/services/
+# https://docs.docker.com/reference/cli/docker/container/run/
+#
+# Usage (Linux only, append to whichever stack you are running):
+#   docker compose -f docker-compose.base.yml -f docker-compose.cassandra.yml -f docker-compose.storage-limits.yml up -d
+#   docker compose -f docker-compose.base.yml -f docker-compose.scylla.yml    -f docker-compose.storage-limits.yml up -d
+services:
+  cassandra:
+    storage_opt:
+      size: "20G"
+
+  jmx-exporter:
+    storage_opt:
+      size: "1G"
+
+  scylla:
+    storage_opt:
+      size: "20G"
