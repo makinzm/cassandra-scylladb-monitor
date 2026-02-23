@@ -9,8 +9,8 @@ services:
       LOCAL_JMX: "no"
       # Environment variables are expanded in conf/cassandra-env.sh to set for avoiding docker 137 OOM
       # https://github.com/apache/cassandra/blob/940739a4889794a5f198731b152c70e86bc95976/conf/cassandra-env.sh
-      MAX_HEAP_SIZE: 2G
-      HEAP_NEWSIZE: 512M
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 256M
     # Copies jmxremote.password into the container with mode 400 at startup.
     # The JVM rejects the file if it is world-readable.
     # https://docs.oracle.com/en/java/javase/17/management/monitoring-and-management-using-jmx-technology.html
@@ -33,7 +33,7 @@ services:
       resources:
         limits:
           cpus: "2.0"
-          memory: 4G
+          memory: 3G
   jmx-exporter:
     image: bitnami/jmx-exporter:latest
     ports:
