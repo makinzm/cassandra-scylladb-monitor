@@ -125,6 +125,21 @@ If a commit is blocked, fix the offending file with:
 git update-index --chmod=-x <file>
 ```
 
+## Development Log Policy
+
+Record bug investigations and troubleshooting in `development_log/`. Not required for straightforward implementation work.
+
+**File layout:** `development_log/YYYY/MM/YYYY-MM-DD.md` — append to the same file if the investigation spans multiple days.
+
+**Write a log when:**
+- Debugging an error whose cause is not immediately obvious
+- Testing multiple hypotheses to isolate a problem
+- Hitting environment-specific issues (OS, driver version, resource limits, etc.)
+
+**Skip the log when:**
+- Implementation is proceeding without surprises
+- The fix is a simple typo or misconfiguration caught immediately
+
 ## Comment Policy
 
 Comment only when the reason behind a decision is non-obvious. Keep comments concise: one or two lines stating the reason and, where applicable, a link to the official documentation or source.
