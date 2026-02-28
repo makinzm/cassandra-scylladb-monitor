@@ -23,3 +23,4 @@ services:
     volumes:
       # :ro prevents the container from writing back to the host files.
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro

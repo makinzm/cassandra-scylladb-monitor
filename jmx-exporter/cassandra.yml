@@ -33,3 +33,11 @@ rules:
     labels:
       cache: $1
     type: COUNTER
+
+  # ClientRequest error counters: timeouts, failures, and unavailable exceptions
+  - pattern: 'org.apache.cassandra.metrics<type=ClientRequest, scope=(Read|Write|RangeSlice|CASRead|CASWrite), name=(Timeouts|Failures|Unavailables)><>Count'
+    name: cassandra_client_request_errors_total
+    labels:
+      operation: $1
+      error_type: $2
+    type: COUNTER
